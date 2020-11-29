@@ -82,7 +82,7 @@ WHERE
     
 -- Question 12: Viết lệnh để lấy ra danh sách các phòng ban có >3 nhân viên
 SELECT 
-    count(*) as so_nhan_vien, d.DepartmentName
+    count(a.DepartmentID) as so_nhan_vien, d.DepartmentName
 FROM
     account a
         JOIN
@@ -92,13 +92,11 @@ HAVING so_nhan_vien > 3;
 
 -- Question 13: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều nhất
 SELECT 
-    COUNT(*) AS so_lan_su_dung, q.Content
+    COUNT(e.QuestionID) AS so_lan_su_dung, q.Content
 FROM
     question q
-        JOIN
+        LEFT JOIN
     examquestion e ON e.QuestionID = q.QuestionID
-        JOIN
-    exam ON exam.ExamID = e.ExamID
 GROUP BY q.Content
 ORDER BY so_lan_su_dung DESC
 LIMIT 1;
@@ -108,14 +106,14 @@ SELECT
     COUNT(q.CategoryID) AS lan_su_dung, c.CategoryName
 FROM
     question q
-        RIGHT JOIN
+        JOIN
     categoryquestion c ON c.CategoryID = q.CategoryID
 GROUP BY c.CategoryName
 ORDER BY lan_su_dung;
 
 -- Question 15: Lấy ra Question có nhiều câu trả lời nhất
 SELECT 
-    COUNT(*) so_luong_cau_tra_loi, q.Content
+    COUNT(a.QuestionID) so_luong_cau_tra_loi, q.Content
 FROM
     question q
         JOIN
@@ -126,7 +124,7 @@ LIMIT 1;
 
 -- Question 16: Tìm chức vụ có ít người nhất 
 SELECT 
-    COUNT(*) AS so_luong_nguoi, p.PositionName
+    COUNT(a.PositionID) AS so_luong_nguoi, p.PositionName
 FROM
     account a
         JOIN
