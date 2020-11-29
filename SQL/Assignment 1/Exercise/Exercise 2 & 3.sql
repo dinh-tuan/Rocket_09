@@ -12,6 +12,6 @@ CREATE TABLE Staff (
     id 				INT AUTO_INCREMENT,
     name_st 		VARCHAR(50),
     Birth_date 		DATE,
-    Gender 			ENUM('0', '1', 'Null'),
-    IsDeletedFlag 	ENUM('0', '1')
+    Gender 			Boolean,
+    IsDeletedFlag 	Boolean
 );
