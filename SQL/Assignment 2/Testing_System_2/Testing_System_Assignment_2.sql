@@ -106,7 +106,7 @@ SELECT
     COUNT(q.CategoryID) AS lan_su_dung, c.CategoryName
 FROM
     question q
-        JOIN
+        RIGHT JOIN
     categoryquestion c ON c.CategoryID = q.CategoryID
 GROUP BY c.CategoryName
 ORDER BY lan_su_dung;
@@ -137,9 +137,7 @@ LIMIT 1;
 SELECT 
     p.PositionName, COUNT(a.PositionID) AS so_luong
 FROM
-    department d
-        JOIN
-    account a ON d.DepartmentID = a.DepartmentID
+    account a 
         RIGHT JOIN
     positionn p ON p.PositionID = a.PositionID
 GROUP BY p.PositionName;
