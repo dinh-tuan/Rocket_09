@@ -2,7 +2,7 @@ use manager;
 
 -- Question 1: Tạo store để người dùng nhập vào tên phòng ban và in ra tất cả các account thuộc phòng ban đó
 DELIMITER $$
-CREATE PROCEDURE select_account(in p_DepartmentID int)
+CREATE PROCEDURE select_account(in p_DepartmentNAME int)
 begin
 SELECT 
     a.AccountID, a.Fullname
@@ -11,7 +11,7 @@ FROM
         RIGHT JOIN
     Department d ON d.DepartmentID = a.DepartmentID
 WHERE
-    d.DepartmentID = p_DepartmentID;
+    d.DepartmentNAME = p_DepartmentNAME;
 end $$
 DELIMITER ;
 
@@ -57,26 +57,42 @@ SELECT
 FROM
     question q
         RIGHT JOIN
-    typequestion t ON q.TypeID = t.TypeID
-GROUP BY t.TypeID
-ORDER BY COUNT(q.QuestionID) DESC
-LIMIT 1;
-end $$
-DELIMITER ;
-
--- Question 5: Sử dụng store ở question 4 để tìm ra tên của type question
-DELIMITER $$
-CREATE PROCEDURE select_id_va_name_cua_typequestion_co_nhieu_ques_nhat(out p_typeID int,out p_typename varchar(255))
-begin
-SELECT 
-	t.typeID,t.TypeName INTO p_typeID,p_typename
+    typequestion t ON q.TypeID = t.TypeID 
+    GROUP BY t.typeID 
+    HAVING count(q.typeID) = (SELECT 
+	COUNT(q.typeID)
 FROM
     question q
         RIGHT JOIN
     typequestion t ON q.TypeID = t.TypeID
 GROUP BY t.TypeID
-ORDER BY COUNT(q.QuestionID) DESC
-LIMIT 1;
+ORDER BY COUNT(q.typeID) DESC
+LIMIT 1);
+end $$
+DELIMITER ;
+
+
+
+-- Question 5: Sử dụng store ở question 4 để tìm ra tên của type question
+DELIMITER $$
+CREATE PROCEDURE select_name_cua_typequestion_co_nhieu_ques_nhat(out p_typeNAME varchar(255))
+begin
+SELECT 
+	t.typeNAME INTO p_typeNAME
+FROM
+    question q
+        RIGHT JOIN
+    typequestion t ON q.TypeID = t.TypeID 
+    GROUP BY t.typeID 
+    HAVING count(q.typeID) = (SELECT 
+	COUNT(q.typeID)
+FROM
+    question q
+        RIGHT JOIN
+    typequestion t ON q.TypeID = t.TypeID
+GROUP BY t.TypeID
+ORDER BY COUNT(q.typeID) DESC
+LIMIT 1);
 end $$
 DELIMITER ;
 
@@ -86,21 +102,15 @@ DELIMITER ;
  chuỗi của người dùng nhập vào
 */
 DELIMITER $$
-CREATE PROCEDURE select_name_chuoi_acc_group(in p_chuoi varchar(225),out ten_chuoi varchar(255))
-begin
-SELECT 
-    Username INTO ten_chuoi
-FROM
-    account
-WHERE
-    Username = p_chuoi;
-SELECT 
-    GroupName INTO ten_chuoi
-FROM
-    groupp
-WHERE
-    GroupName = p_chuoi;
-end $$
+CREATE PROCEDURE select_chuoi (IN CHUOI VARCHAR(10))
+	BEGIN
+		SELECT Username
+        FROM account
+        WHERE Username LIKE concat('%', CHUOI, '%') UNION
+        SELECT GroupName
+        FROM groupp
+        WHERE GroupName LIKE concat('%', CHUOI, '%');
+	END$$
 DELIMITER ;
 
 -- Question 7: Viết 1 store cho phép người dùng nhập vào thông tin fullName, email và trong store sẽ tự động gán: username sẽ giống email nhưng bỏ phần @..mail đi positionID: sẽ có default là developer departmentID: sẽ được cho vào 1 phòng chờ Sau đó in ra kết quả tạo thành công
@@ -113,7 +123,12 @@ VALUES (p_fullname,p_email);
 UPDATE account 
 SET 
     username = 	SUBSTRING_INDEX(p_email, "@", 1),
-    PositionID = 1
+    PositionID = (SELECT 
+    PositionID
+FROM
+    Positionn
+WHERE
+    PositionName = 'Dev')
 WHERE
     Email = p_email
         AND fullname = p_fullname;
@@ -126,14 +141,23 @@ DELIMITER $$
 CREATE PROCEDURE select_typename_co_content_dai_nhat(in p_typename ENUM('Essay','Multiple Choice'),out p_content varchar(255))
 begin
 SELECT 
-	q.Content INTO p_content
-FROM
+    q.Content
+INTO p_content FROM
     question q
         RIGHT JOIN
     typequestion t ON q.TypeID = t.TypeID
-    where p_typename = t.typename
-ORDER BY char_length(q.content) DESC
-LIMIT 1;
+WHERE
+    p_typename = t.typename
+        AND CHAR_LENGTH(q.content) = (SELECT 
+            CHAR_LENGTH(q.content)
+        FROM
+            question q
+                RIGHT JOIN
+            typequestion t ON q.TypeID = t.TypeID
+        WHERE
+            p_typename = t.typename
+        ORDER BY CHAR_LENGTH(q.content) DESC
+        LIMIT 1);
 end $$
 DELIMITER ;
 
@@ -156,20 +180,20 @@ DELIMITER ;
 */
 
 DELIMITER $$
-CREATE PROCEDURE delete_exam_theo_id(out so_record_da_xoa int)
+CREATE PROCEDURE delete_exam(out so_record_da_xoa int)
 begin
 SELECT 
-    *, COUNT(*) AS so_record_da_xoa
+    COUNT(*) AS so_record_da_xoa
 FROM
     examquestion eq
         JOIN
     exam e ON eq.ExamID = e.ExamID
 WHERE
-    DATEDIFF(SYSDATE(), e.CreateDate) > 1095;
+    DATE_SUB(SYSDATE(), interval 3 year) >= e.createDATE;
     
 DELETE FROM exam 
 WHERE 
-    DATEDIFF(SYSDATE(), CreateDate) > 1095;
+    DATE_SUB(SYSDATE(), interval 3 year) >= e.createDATE;
 end $$
 DELIMITER ;
 
@@ -210,13 +234,23 @@ DELIMITER ;
 DELIMITER $$
 CREATE PROCEDURE select_so_cau_hoi_trong_6_thang_gan_nhat()
 begin
-SELECT 
-    MONTH(CreateDate) as tháng,count(*) as so_cau_hoi_trong_nam_nay
+SELECT A.* FROM (SELECT 
+    MONTH(CreateDate) as thang,COUNT(MONTH(CreateDate)) AS so_cau_hoi_trong_nam_nay
 FROM
-    question
+    question 
 WHERE
-	DATEDIFF(SYSDATE(),CreateDate) < 180
+    DATE_SUB(SYSDATE(), INTERVAL 5 MONTH) <= createDATE
 GROUP BY MONTH(CreateDate)
-ORDER BY so_cau_hoi_trong_nam_nay;
+ORDER BY so_cau_hoi_trong_nam_nay) AS A;
+
+INSERT INTO A(thang)
+VALUES (MONTH(SYSDATE()),
+        MONTH(DATE_SUB(SYSDATE(), INTERVAL 1 MONTH)),
+        MONTH(DATE_SUB(SYSDATE(), INTERVAL 2 MONTH)),
+        MONTH(DATE_SUB(SYSDATE(), INTERVAL 3 MONTH)),
+        MONTH(DATE_SUB(SYSDATE(), INTERVAL 4 MONTH)),
+        MONTH(DATE_SUB(SYSDATE(), INTERVAL 5 MONTH)));
 end $$
 DELIMITER ;
+
+SELECT DATE_SUB(SYSDATE(), INTERVAL 5 MONTH);

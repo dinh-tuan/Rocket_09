@@ -99,7 +99,6 @@ END IF;
 end$$
 DELIMITER ;
 
-
 -- d) Viết hàm (có parameter) trả về thông tin 1 nhân viên đã tham gia làm mặc dù không ai giao việc cho nhân viên đó (trong bảng Works)
 DELIMITER $$
 create Function select_employee_join_work(p_EmployeeID int) returns varchar(255) DETERMINISTIC
@@ -109,7 +108,7 @@ SELECT
     e.EmployeeLastName
 INTO p_EmployeeLastName FROM
     employee e
-        LEFT JOIN
+        JOIN
     workdone w ON e.EmployeeID = w.EmployeeID
 WHERE
     SupervisorID IS NULL

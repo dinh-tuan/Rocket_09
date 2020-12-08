@@ -38,8 +38,7 @@ FROM
         JOIN
     answer a ON q.QuestionID = a.QuestionID
 GROUP BY q.QuestionID
-HAVING so_cau_tra_loi >= 4
-;
+HAVING so_cau_tra_loi >= 4;
 
 -- Question 6: Lấy ra 5 group được tạo gần đây nhất
 SELECT 
@@ -53,7 +52,7 @@ LIMIT 5;
 DELETE FROM exam 
 WHERE
     CreateDate < '2019-12-20';
-    
+   
 -- Question 9: Update thông tin của account có id = 5 thành tên "Nguyễn Bá Lộc" và email thành loc.nguyenba@vti.com.vn
 UPDATE account 
 SET 
@@ -92,14 +91,21 @@ HAVING so_nhan_vien > 3;
 
 -- Question 13: Viết lệnh để lấy ra danh sách câu hỏi được sử dụng trong đề thi nhiều nhất
 SELECT 
-    COUNT(e.QuestionID) AS so_lan_su_dung, q.Content
+    q.Content
+FROM
+    question q
+        LEFT JOIN
+    examquestion e ON e.QuestionID = q.QuestionID
+GROUP BY q.QuestionID
+HAVING COUNT(e.QuestionID) = (SELECT 
+    COUNT(e.QuestionID)
 FROM
     question q
         LEFT JOIN
     examquestion e ON e.QuestionID = q.QuestionID
 GROUP BY q.Content
-ORDER BY so_lan_su_dung DESC
-LIMIT 1;
+ORDER BY COUNT(e.QuestionID) DESC
+LIMIT 1);
 
 -- Question 14: Thông kê mỗi category Question được sử dụng trong bao nhiêu Question
 SELECT 
@@ -108,39 +114,68 @@ FROM
     question q
         RIGHT JOIN
     categoryquestion c ON c.CategoryID = q.CategoryID
-GROUP BY c.CategoryName
+GROUP BY c.CategoryID
 ORDER BY lan_su_dung;
 
 -- Question 15: Lấy ra Question có nhiều câu trả lời nhất
 SELECT 
-    COUNT(a.QuestionID) so_luong_cau_tra_loi, q.Content
+    q.Content
 FROM
     question q
-        JOIN
+        LEFT JOIN
+    answer a ON a.QuestionID = q.QuestionID
+GROUP BY q.QuestionID
+HAVING COUNT(a.QuestionID) = (SELECT 
+    COUNT(a.QuestionID) so_luong_cau_tra_loi
+FROM
+    question q
+        LEFT JOIN
     answer a ON a.QuestionID = q.QuestionID
 GROUP BY q.QuestionID
 ORDER BY so_luong_cau_tra_loi DESC
-LIMIT 1;
+LIMIT 1);
 
 -- Question 16: Tìm chức vụ có ít người nhất 
 SELECT 
-    COUNT(a.PositionID) AS so_luong_nguoi, p.PositionName
+    p.PositionName
 FROM
     account a
-        JOIN
+        RIGHT JOIN
     positionn p ON p.PositionID = a.PositionID
-GROUP BY a.PositionID
-ORDER BY so_luong_nguoi
-LIMIT 1;
+GROUP BY p.PositionID
+HAVING COUNT(a.PositionID) = (SELECT 
+        COUNT(a.PositionID) AS so_luong_nguoi
+    FROM
+        account a
+            RIGHT JOIN
+        positionn p ON p.PositionID = a.PositionID
+    GROUP BY p.PositionID
+    ORDER BY so_luong_nguoi
+    LIMIT 1);
 
 -- Question 17: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
 SELECT 
-    p.PositionName, COUNT(a.PositionID) AS so_luong
+    d.DepartmentName,count(a.PositionID) as gi_day,p.PositionName
 FROM
-    account a 
+    department d
+        LEFT JOIN
+    account a ON d.DepartmentID = a.DepartmentID
+        JOIN
+    Positionn p ON a.PositionID = p.PositionID
+GROUP BY p.PositionName,d.DepartmentName;
+
+-- test
+SELECT 
+    d.DepartmentName,
+    COUNT(a.PositionID) AS gi_day,
+    IFNULL(p.PositionName, 'dep không có po') AS PositionName
+FROM
+    Positionn p
+        JOIN
+    account a ON a.PositionID = p.PositionID
         RIGHT JOIN
-    positionn p ON p.PositionID = a.PositionID
-GROUP BY p.PositionName;
+    department d ON d.DepartmentID = a.DepartmentID
+GROUP BY p.PositionName , d.DepartmentName;
 
 -- Question 18: Lấy thông tin chi tiết của câu hỏi bao gồm: thông tin cơ bản của question, loại câu hỏi, ai là người tạo ra câu hỏi, câu trả lời là gì, …
 SELECT 
