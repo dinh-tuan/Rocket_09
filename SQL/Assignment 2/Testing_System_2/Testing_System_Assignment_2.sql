@@ -16,11 +16,16 @@ WHERE
     
 -- Question 3: lấy ra thông tin account có full name dài nhất
 SELECT 
-    Fullname,CHAR_LENGTH(fullname) as so_luong_ky_tu
+    fullName
 FROM
     account
-ORDER BY CHAR_LENGTH(fullname) DESC
-LIMIT 1;
+WHERE
+    CHAR_LENGTH(fullname) = (SELECT 
+            CHAR_LENGTH(fullname) AS so_luong_ky_tu
+        FROM
+            account
+        ORDER BY CHAR_LENGTH(fullname) DESC
+        LIMIT 1);
 
 -- Question 4: Lấy ra tên group đã tham gia trước ngày 20/12/2019
 SELECT 
@@ -32,10 +37,10 @@ WHERE
     
 -- Question 5: Lấy ra ID của question có >= 4 câu trả lời
 SELECT 
-    q.QuestionID,count(a.answerID) as so_cau_tra_loi
+    q.QuestionID, COUNT(a.QuestionID) AS so_cau_tra_loi
 FROM
     question q
-        JOIN
+        LEFT JOIN
     answer a ON q.QuestionID = a.QuestionID
 GROUP BY q.QuestionID
 HAVING so_cau_tra_loi >= 4;
@@ -154,6 +159,7 @@ HAVING COUNT(a.PositionID) = (SELECT
     LIMIT 1);
 
 -- Question 17: Thống kê mỗi phòng ban có bao nhiêu dev, test, scrum master, PM
+-- test 1
 SELECT 
     d.DepartmentName,count(a.PositionID) as gi_day,p.PositionName
 FROM
@@ -164,10 +170,10 @@ FROM
     Positionn p ON a.PositionID = p.PositionID
 GROUP BY p.PositionName,d.DepartmentName;
 
--- test
+-- test 2
 SELECT 
     d.DepartmentName,
-    COUNT(a.PositionID) AS gi_day,
+    COUNT(a.PositionID) AS so_luong_po,
     IFNULL(p.PositionName, 'dep không có po') AS PositionName
 FROM
     Positionn p
