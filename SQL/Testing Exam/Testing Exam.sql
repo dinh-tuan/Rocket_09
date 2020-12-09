@@ -43,6 +43,14 @@ INSERT INTO `testing_exam`.`car` (`CarID`, `Maker`, `Model`, `Color`, `Note`) VA
 INSERT INTO `testing_exam`.`car` (`CarID`, `Maker`, `Model`, `Color`, `Note`) VALUES ('4', 'NISSAN', 'xe ba bánh', 'black', 'xe mui trần');
 INSERT INTO `testing_exam`.`car` (`CarID`, `Maker`, `Model`, `Color`, `Note`) VALUES ('5', 'HONDA', 'xe tàu khựa', 'white', 'mèo');
 
+
+SELECT
+CASE
+    WHEN Quantity > 30 THEN "The quantity is greater than 30"
+    WHEN Quantity = 30 THEN "The quantity is 30"
+    ELSE "The quantity is under 30"
+END
+FROM OrderDetails;
 -- INSERT TABLE customer
 INSERT INTO `testing_exam`.`customer` (`CustomerID`, `Name`, `Phone`, `Email`, `Address`, `Note`) VALUES ('1', 'Tuấn', '0812811358', 'dinhtuanpk@gmail.com', 'Phú diễn', 'đẹp trai');
 INSERT INTO `testing_exam`.`customer` (`CustomerID`, `Name`, `Phone`, `Email`, `Address`, `Note`) VALUES ('2', 'Tú', '0215478788', 'dinhtu@gmail.com', 'Phú diễn', 'Đen');
