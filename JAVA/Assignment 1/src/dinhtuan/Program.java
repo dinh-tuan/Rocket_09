@@ -171,14 +171,6 @@ public class Program {
 		Exam3.createDate = LocalDate.of(2020, 8, 14);
 
 		// question Of Exam
-		Exam[] examOfQuestion1 = { Exam1 };
-		Question1.exam = examOfQuestion1;
-		Exam[] examOfQuestion2 = { Exam1, Exam3 };
-		Question2.exam = examOfQuestion2;
-		Exam[] examOfQuestion3 = { Exam1, Exam2 };
-		Question3.exam = examOfQuestion3;
-		Exam[] examOfQuestion4 = { Exam2 };
-		Question4.exam = examOfQuestion4;
 		Question[] questionOfExam1 = { Question4 };
 		Exam1.Question = questionOfExam1;
 		Question[] questionOfExam2 = { Question4 };
