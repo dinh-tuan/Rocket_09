@@ -179,6 +179,12 @@ public class Program {
 		Question3.exam = examOfQuestion3;
 		Exam[] examOfQuestion4 = { Exam2 };
 		Question4.exam = examOfQuestion4;
+		Question[] questionOfExam1 = { Question4 };
+		Exam1.Question = questionOfExam1;
+		Question[] questionOfExam2 = { Question4 };
+		Exam2.Question = questionOfExam2;
+		Question[] questionOfExam3 = { Question4, Question3 };
+		Exam3.Question = questionOfExam3;
 
 		// Print
 		System.out.println("Account 1 la : " + Account1.email);

@@ -9,4 +9,5 @@ public class Exam {
 	CategoryQuestion categoryQuestion;
 	int duration;
 	LocalDate createDate;
+	Question[] Question;
 }
