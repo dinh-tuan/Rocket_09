@@ -1,4 +1,4 @@
--- Questions 1 : 
+-- Questions 1 :
 -- create db
 DROP DATABASE IF EXISTS baithi;
 
@@ -51,11 +51,18 @@ INSERT INTO `baithi`.`location` (`Location_id`, `street_address`, `postal_code`,
 INSERT INTO `baithi`.`location` (`Location_id`, `street_address`, `postal_code`, `country_id`) VALUES ('5', 'Hà Nội', '4563', '4');
 
 -- insert table employees
-INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('1', 'Đình Tuấn', 'dinhtuanpk@gmail.com', '2');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('1', 'Đình Tuấn', 'dinhtuanpk@gmail.com', '1');
 INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('2', 'Đức Vượng', 'ducvuong@gmail.com', '1');
-INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('3', 'Bảo Anh', 'baoanh@gmail.com', '3');
-INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('4', 'Đình Tú', 'dinhtu@gmail.com', '4');
-INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('5', 'Anh Thái', 'nn03@gmail.com', '5');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('3', 'Bảo Anh', 'baoanh@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('4', 'Đình Tú', 'dinhtu@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('5', 'Anh Thái', 'nn03@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('6', 'Trà My', 'tramy@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('7', 'Quyết Vũ', 'quyetvu@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('8', 'Quỳnh Anh', 'quynhanh@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('9', 'Văn Tráng', 'vantrang@gmail.com', '1');
+INSERT INTO `baithi`.`employees` (`employees_id`, `full_name`, `email`, `Location_id`) VALUES ('10', 'Nguyễn Nguyên', 'nguyennguyen@gmai.com', '3');
+
+
 
 -- Questions 2
 -- a) Lấy tất cả các nhân viên thuộc Việt nam
@@ -114,7 +121,7 @@ BEGIN
 		NEW.Location_id = l.Location_id
 	GROUP BY c.country_id;
 
-	IF  V_1 > 10 THEN
+	IF  V_1 >= 10 THEN
     signal sqlstate '45000'
     SET MESSAGE_TEXT = 'Quoc gia nay da du 10 nguoi';
     END IF;
