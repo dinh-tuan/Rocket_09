@@ -10,5 +10,5 @@ public class Account {
 	Department department;
 	Position position;
 	LocalDate createDate;
-	Group[] group;
+	Group[] group;	
 }

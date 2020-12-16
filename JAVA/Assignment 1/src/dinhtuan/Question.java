@@ -7,6 +7,5 @@ public class Question {
 	String content;
 	CategoryQuestion category;
 	TypeQuestion type;
-	LocalDate createDate;
-	Exam[] exam;
+	LocalDate createDate;			
 }

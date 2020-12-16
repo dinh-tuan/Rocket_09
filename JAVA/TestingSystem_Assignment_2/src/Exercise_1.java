@@ -4,22 +4,24 @@ public class Exercise_1 {
 
 	public static void main(String[] args) {
 
+		
 		Scanner input = new Scanner(System.in);
-
 		/*
 		 * Question 1: Viết chương trình nhập vào một số thực. Đơn vị tính cho số này là
 		 * centimet (cm). Hãy in ra số tương đương tính bằng foot (số thực, có 2 số lẻ
 		 * thập phân) và inch (số thực, có 2 số lẻ thập phân). Với 1 inch = 2.54 cm và 1
 		 * foot = 12 inches
 		 */
+		
 
 		System.out.print("Nhập só thực (cm) : ");
 		double so_thuc = input.nextDouble();
-		double inch = Math.ceil((so_thuc / 2.54) * 100) / 100;
-		System.out.println("Inch = " + inch);
-		double foot = Math.ceil((inch * 12) * 100) / 100;
-		System.out.println("Foot = " + foot);
+		double inch = so_thuc / 2.54;
+		System.out.printf("Inch = %.2f \n", inch);
+		double foot = inch / 12;
+		System.out.printf("Foot = %.2f \n", foot);
 
+		// %.2f
 		/*
 		 * Question 2: Viết chương trình nhập vào số giây từ 0 tới 68399, đổi số giây
 		 * này thành dạng [giờ:phút:giây], mỗi thành phần là một số nguyên có 2 chữ số.
@@ -28,16 +30,22 @@ public class Exercise_1 {
 
 		System.out.print("Nhập vào số giây từ 0 - 68399 : ");
 		int so_giay = input.nextInt();
-		int so_phut = so_giay / 60;
-		int so_gio = so_phut / 60;
-		String giay = String.format("%02d", so_giay % 60);
-		String phut = String.format("%02d", so_phut % 60);
-		String gio = String.format("%02d", so_gio);
 		if (so_giay >= 0 && so_giay <= 68399) {
-			System.out.println("giờ giấc là : " + gio + ":" + phut + ":" + giay);
+			int so_phut = so_giay / 60;
+			int so_gio = so_phut / 60;
+			System.out.printf("giờ giấc là : %02d:%02d:%02d \n", so_gio, (so_phut % 60), (so_giay % 60));
 		} else {
 			System.out.println("số giây nhập không trong giới hạn từ 0 - 68399");
 		}
+
+//		if (so_giay >= 0 && so_giay <= 68399) {
+//			String giay = String.format("%02d", so_giay % 60);
+//			String phut = String.format("%02d", so_phut % 60);
+//			String gio = String.format("%02d", so_gio);
+//			System.out.println("giờ giấc là : " + gio + ":" + phut + ":" + giay);
+//		} else {
+//			System.out.print("số giây nhập không trong giới hạn từ 0 - 68399");
+//		}
 
 		/*
 		 * Question 3: Viết chương trình nhập vào 4 số nguyên. Hiển thị ra số lớn nhất
@@ -132,6 +140,8 @@ public class Exercise_1 {
 		} else {
 			System.out.println("Loại kém");
 		}
+
+		input.close();
 	}
 
 }
