@@ -1,3 +1,4 @@
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -7,34 +8,47 @@ import java.util.Scanner;
  */
 public class test {
 
-	public static boolean isPrimeNumber(int n) {
-		// so nguyen n < 2 khong phai la so nguyen to
-		if (n < 2) {
-			return false;
-		}
-		// check so nguyen to khi n >= 2
-		for (int i = 2; i <= n; i++) {
-			if (n % i == 0) {
-				return false;
-			}
-		}
-		return true;
-	}
-
 	public static void main(String[] args) {
 
-		Scanner scanner = new Scanner(System.in);
-		System.out.print("Nhập n = ");
-		int n = scanner.nextInt();
-		System.out.printf("Tất cả các số nguyên tố nhỏ hơn %d là: \n", n);
-		if (n >= 2) {
-			System.out.print(2);
+		Random random = new Random();
+
+		int[] arr = new int[100];
+		for (int i = 0; i < 100; i++) {
+			arr[i] = random.nextInt(100);
+			System.out.print(" " + arr[i]);
 		}
-		for (int i = 3; i < n; i += 2) {
-			if (isPrimeNumber(i)) {
-				System.out.print(" " + i);
+
+		// a)
+		int max = arr[0];
+		int max2 = arr[0];
+
+		for (int i = 1; i < arr.length; i++) {
+			if (max < arr[i]) {
+				max = arr[i];
+			}
+			if (max2 < arr[i] && arr[i] != max) {
+				max2 = arr[i];
 			}
 		}
-	}
 
+		System.out.println("\nSố lớn nhất là : " + max);
+		System.out.println("\nSố lớn thứ hai là : " + max2);
+
+		// b)
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = i + 1; j < arr.length; j++) {
+				if (arr[i] < arr[j]) {
+					int tang = arr[i];
+					arr[i] = arr[j];
+					arr[j] = tang;
+				}
+			
+			}
+			System.out.print(" " +arr[i]);
+		}
+		
+		// c) 
+		
+
+	}
 }
